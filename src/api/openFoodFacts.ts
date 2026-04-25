@@ -17,7 +17,6 @@ interface OpenFoodFactsProducto {
 
 interface OpenFoodFactsRespuesta {
   products: OpenFoodFactsProducto[];
-  count: number;
 }
 
 function extraerNutrientes(producto: OpenFoodFactsProducto): Nutrientes {
@@ -49,7 +48,7 @@ export async function buscarIngrediente(nombre: string): Promise<Ingrediente[]> 
   const datos: OpenFoodFactsRespuesta = await respuesta.json();
 
   return datos.products
-    .filter((p) => p.product_name)
+    .filter((p) => p.product_name && p.product_name.trim() !== "")
     .map((p) => ({
       id: crypto.randomUUID(),
       nombre: p.product_name,

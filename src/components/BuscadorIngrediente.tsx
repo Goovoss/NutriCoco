@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { buscarIngrediente } from "../api/openFoodFacts.ts";
+import { buscarIngredienteCombinado } from "../api/index";
 import type { Ingrediente } from "../types";
 
 interface Props {
@@ -17,7 +17,7 @@ export function BuscadorIngrediente({ onAgregarIngrediente }: Props) {
     setCargando(true);
     setError(null);
     try {
-      const datos = await buscarIngrediente(busqueda);
+      const datos = await buscarIngredienteCombinado(busqueda);
       setResultados(datos);
       if (datos.length === 0) setError("No se encontraron resultados");
     } catch {

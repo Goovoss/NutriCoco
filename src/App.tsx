@@ -1,41 +1,31 @@
 import { useState } from "react";
 import { BuscadorIngrediente } from "./components/BuscadorIngrediente";
+import { TarjetaIngrediente } from "./components/TarjetaIngrediente";
 import { ResumenNutricional } from "./components/ResumenNutricional";
 import type { Ingrediente } from "./types";
 
 function App() {
-  const [nombrePlato, setNombrePlato] = useState("");
   const [ingredientes, setIngredientes] = useState<Ingrediente[]>([]);
+  const [mostrarBalance, setMostrarBalance] = useState(false);
 
   function agregarIngrediente(ingrediente: Ingrediente) {
     setIngredientes((prev) => [...prev, ingrediente]);
+    setMostrarBalance(false);
   }
 
   function eliminarIngrediente(id: string) {
     setIngredientes((prev) => prev.filter((i) => i.id !== id));
+    setMostrarBalance(false);
   }
 
   return (
     <div className="min-h-screen bg-green-50">
       <header className="bg-white shadow-sm py-4 px-6">
         <h1 className="text-2xl font-bold text-green-700">NutriCoco 🥥</h1>
+        <p className="text-sm text-gray-400">Analiza los nutrientes de tu plato</p>
       </header>
 
       <main className="max-w-2xl mx-auto px-4 py-8 flex flex-col gap-6">
-        {/* Nombre del plato */}
-        <div className="bg-white rounded-xl p-5 shadow-sm">
-          <label className="block text-sm font-semibold text-gray-600 mb-2">
-            Nombre del plato
-          </label>
-          <input
-            type="text"
-            value={nombrePlato}
-            onChange={(e) => setNombrePlato(e.target.value)}
-            placeholder="Ej: Mi Sandwich"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
-          />
-        </div>
-
         {/* Buscador */}
         <div className="bg-white rounded-xl p-5 shadow-sm">
           <h2 className="text-sm font-semibold text-gray-600 mb-3">
@@ -44,38 +34,41 @@ function App() {
           <BuscadorIngrediente onAgregarIngrediente={agregarIngrediente} />
         </div>
 
-        {/* Lista de ingredientes */}
+        {/* Tarjetas de ingredientes */}
         {ingredientes.length > 0 && (
-          <div className="bg-white rounded-xl p-5 shadow-sm">
-            <h2 className="text-sm font-semibold text-gray-600 mb-3">
-              Ingredientes ({ingredientes.length})
+          <>
+            <h2 className="text-sm font-semibold text-gray-500 -mb-3">
+              Ingredientes añadidos ({ingredientes.length})
             </h2>
-            <ul className="flex flex-col gap-2">
+            <div className="grid grid-cols-2 gap-3">
               {ingredientes.map((ing) => (
-                <li
+                <TarjetaIngrediente
                   key={ing.id}
-                  className="flex justify-between items-center bg-green-50 rounded-lg px-4 py-2"
-                >
-                  <span className="text-sm">{ing.nombre}</span>
-                  <button
-                    onClick={() => eliminarIngrediente(ing.id)}
-                    className="text-red-400 hover:text-red-600 text-sm font-semibold"
-                  >
-                    ✕
-                  </button>
-                </li>
+                  ingrediente={ing}
+                  onEliminar={eliminarIngrediente}
+                />
               ))}
-            </ul>
-          </div>
+            </div>
+
+            {/* Botón generar balance */}
+            <button
+              onClick={() => setMostrarBalance(true)}
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition-colors"
+            >
+              Generar balance total 🥗
+            </button>
+          </>
         )}
 
-        {/* Resumen nutricional */}
-        <div className="bg-white rounded-xl p-5 shadow-sm">
-          <h2 className="text-sm font-semibold text-gray-600 mb-3">
-            Resumen nutricional
-          </h2>
-          <ResumenNutricional ingredientes={ingredientes} />
-        </div>
+        {/* Balance total */}
+        {mostrarBalance && ingredientes.length > 0 && (
+          <div className="bg-white rounded-xl p-5 shadow-sm">
+            <h2 className="text-sm font-semibold text-gray-600 mb-3">
+              Balance nutricional total
+            </h2>
+            <ResumenNutricional ingredientes={ingredientes} />
+          </div>
+        )}
       </main>
     </div>
   );

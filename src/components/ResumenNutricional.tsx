@@ -21,11 +21,23 @@ function calcularTotales(ingredientes: Ingrediente[]): Nutrientes {
 
 function calcularSemaforo(totales: Nutrientes): { color: string; texto: string } {
   if (totales.calorias === 0) return { color: "bg-gray-200", texto: "Sin datos" };
-  if (totales.grasas < 10 && totales.azucar < 10 && totales.sal < 1.5)
-    return { color: "bg-green-400", texto: "Saludable 🟢" };
-  if (totales.grasas < 20 && totales.azucar < 20 && totales.sal < 3)
-    return { color: "bg-yellow-400", texto: "Moderado 🟡" };
-  return { color: "bg-red-400", texto: "Alto en nutrientes críticos 🔴" };
+
+  // Umbrales por plato (no por día entero)
+  const esRojo =
+    totales.grasas > 40 ||
+    totales.azucar > 30 ||
+    totales.sal > 6 ||
+    totales.calorias > 1200;
+
+  const esAmarillo =
+    totales.grasas > 20 ||
+    totales.azucar > 15 ||
+    totales.sal > 3 ||
+    totales.calorias > 700;
+
+  if (esRojo) return { color: "bg-red-400", texto: "Alto en nutrientes críticos 🔴" };
+  if (esAmarillo) return { color: "bg-yellow-400", texto: "Moderado, con cuidado 🟡" };
+  return { color: "bg-green-400", texto: "Saludable 🟢" };
 }
 
 interface FilaNutrienteProps {
