@@ -7,16 +7,15 @@ export function Bienvenida() {
     <div className="min-h-screen bg-green-50 flex flex-col items-center justify-center px-4">
       <div className="text-center mb-10">
         <h1 className="text-5xl font-bold text-green-700 mb-2">NutriCoco 🥥</h1>
-        <p className="text-gray-500 text-lg">Analizador de nutrientes</p>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm p-8 w-full max-w-sm flex flex-col gap-4">
         <button
-          onClick={() => navigate("/app")}
+          onClick={() => navigate("/biometricos-invitado")}
           className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition-colors"
         >
           Entrar como invitado
-        </button>
+          </button>
 
         <button
           onClick={() => navigate("/login")}

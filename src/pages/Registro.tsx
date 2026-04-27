@@ -26,7 +26,7 @@ export function Registro() {
     return;
   }
   login({ nombre, email });
-  navigate("/app");
+  navigate("/biometricos");
 }
 
   return (
