@@ -1,6 +1,6 @@
 import type { Ingrediente, Nutrientes } from "../types";
 
-const BASE_URL = "https://world.openfoodfacts.org/cgi/search.pl";
+const BASE_URL = import.meta.env.VITE_API_URL + "/api/v1";
 
 interface OpenFoodFactsProducto {
   product_name: string;
@@ -13,10 +13,6 @@ interface OpenFoodFactsProducto {
     sugars_100g?: number;
     salt_100g?: number;
   };
-}
-
-interface OpenFoodFactsRespuesta {
-  products: OpenFoodFactsProducto[];
 }
 
 function extraerNutrientes(producto: OpenFoodFactsProducto): Nutrientes {
@@ -33,23 +29,13 @@ function extraerNutrientes(producto: OpenFoodFactsProducto): Nutrientes {
 }
 
 export async function buscarIngrediente(nombre: string): Promise<Ingrediente[]> {
-  const params = new URLSearchParams({
-    search_terms: nombre,
-    search_simple: "1",
-    action: "process",
-    json: "1",
-    page_size: "5",
-    fields: "product_name,nutriments",
-  });
+  const respuesta = await fetch(`${BASE_URL}/alimentos/openfoodfacts?buscar=${encodeURIComponent(nombre)}`);
+  if (!respuesta.ok) return [];
+  const datos = await respuesta.json();
 
-  const respuesta = await fetch(`${BASE_URL}?${params}`);
-  if (!respuesta.ok) throw new Error("Error al conectar con Open Food Facts");
-
-  const datos: OpenFoodFactsRespuesta = await respuesta.json();
-
-  return datos.products
-    .filter((p) => p.product_name && p.product_name.trim() !== "")
-    .map((p) => ({
+  return datos.datos
+    .filter((p: OpenFoodFactsProducto) => p.product_name?.trim())
+    .map((p: OpenFoodFactsProducto) => ({
       id: crypto.randomUUID(),
       nombre: p.product_name,
       nutrientes: extraerNutrientes(p),

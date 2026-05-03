@@ -59,3 +59,28 @@ export async function deleteAlimento(req: Request, res: Response) {
     res.status(500).json({ exito: false, mensaje: "Error al eliminar alimento" });
   }
 }
+
+export async function buscarOpenFoodFacts(req: Request, res: Response) {
+  try {
+    const { buscar } = req.query;
+    if (!buscar) {
+      res.status(400).json({ exito: false, mensaje: "Parámetro buscar requerido" });
+      return;
+    }
+
+    const params = new URLSearchParams({
+      search_terms: String(buscar),
+      search_simple: "1",
+      action: "process",
+      json: "1",
+      page_size: "5",
+      fields: "product_name,nutriments",
+    });
+
+    const respuesta = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?${params}`);
+    const datos = await respuesta.json();
+    res.json({ exito: true, datos: datos.products ?? [] });
+  } catch {
+    res.status(500).json({ exito: false, mensaje: "Error al buscar en Open Food Facts" });
+  }
+}
