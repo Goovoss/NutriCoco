@@ -1,3 +1,4 @@
+import fetch from "node-fetch";
 import type { Request, Response } from "express";
 import {
   obtenerAlimentos,
@@ -78,7 +79,7 @@ export async function buscarOpenFoodFacts(req: Request, res: Response) {
     });
 
     const respuesta = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?${params}`);
-    const datos = await respuesta.json();
+    const datos = await respuesta.json() as { products?: unknown[] };
     res.json({ exito: true, datos: datos.products ?? [] });
   } catch {
     res.status(500).json({ exito: false, mensaje: "Error al buscar en Open Food Facts" });
