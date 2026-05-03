@@ -1,4 +1,6 @@
 import type { Ingrediente, Nutrientes } from "../types";
+import { useUsuario } from "../context/UsuarioContext";
+import { calcularSemaforo } from "../utils/nutricion";
 
 interface Props {
   ingredientes: Ingrediente[];
@@ -19,34 +21,7 @@ function calcularTotales(ingredientes: Ingrediente[]): Nutrientes {
   );
 }
 
-function calcularSemaforo(totales: Nutrientes): { color: string; texto: string } {
-  if (totales.calorias === 0) return { color: "bg-gray-200", texto: "Sin datos" };
-
-  // Umbrales por plato (no por día entero)
-  const esRojo =
-    totales.grasas > 40 ||
-    totales.azucar > 30 ||
-    totales.sal > 6 ||
-    totales.calorias > 1200;
-
-  const esAmarillo =
-    totales.grasas > 20 ||
-    totales.azucar > 15 ||
-    totales.sal > 3 ||
-    totales.calorias > 700;
-
-  if (esRojo) return { color: "bg-red-400", texto: "Alto en nutrientes críticos 🔴" };
-  if (esAmarillo) return { color: "bg-yellow-400", texto: "Moderado, con cuidado 🟡" };
-  return { color: "bg-green-400", texto: "Saludable 🟢" };
-}
-
-interface FilaNutrienteProps {
-  label: string;
-  valor: number;
-  unidad?: string;
-}
-
-function FilaNutriente({ label, valor, unidad = "g" }: FilaNutrienteProps) {
+function FilaNutriente({ label, valor, unidad = "g" }: { label: string; valor: number; unidad?: string }) {
   return (
     <div className="flex justify-between py-2 border-b border-gray-100 last:border-0">
       <span className="text-gray-600 text-sm">{label}</span>
@@ -58,6 +33,8 @@ function FilaNutriente({ label, valor, unidad = "g" }: FilaNutrienteProps) {
 }
 
 export function ResumenNutricional({ ingredientes }: Props) {
+  const { biometricos } = useUsuario();
+
   if (ingredientes.length === 0) {
     return (
       <p className="text-gray-400 text-sm text-center py-6">
@@ -67,13 +44,19 @@ export function ResumenNutricional({ ingredientes }: Props) {
   }
 
   const totales = calcularTotales(ingredientes);
-  const semaforo = calcularSemaforo(totales);
+  const semaforo = calcularSemaforo(totales, biometricos);
 
   return (
     <div className="flex flex-col gap-4">
       <div className={`${semaforo.color} rounded-lg px-4 py-3 text-center font-semibold`}>
         {semaforo.texto}
       </div>
+
+      {!biometricos && (
+        <p className="text-xs text-gray-400 text-center">
+          💡 Añade tus datos biométricos para un análisis más preciso
+        </p>
+      )}
 
       <div className="bg-white rounded-lg p-4 shadow-sm">
         <h3 className="font-semibold text-gray-700 mb-3">Macronutrientes</h3>

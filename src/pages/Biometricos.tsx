@@ -86,26 +86,26 @@ export function Biometricos({ opcional = false }: Props) {
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-gray-600">Peso (kg)</label>
-            <input
-              type="number"
-              value={peso}
-              onChange={(e) => setPeso(e.target.value)}
-              placeholder="Ej: 70"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-gray-600">Altura (cm)</label>
-            <input
-              type="number"
-              value={altura}
-              onChange={(e) => setAltura(e.target.value)}
-              placeholder="Ej: 175"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
-            />
-          </div>
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium text-gray-600">Peso (kg)</label>
+          <input
+            type="number"
+            value={peso}
+            onChange={(e) => setPeso(e.target.value)}
+            placeholder="Ej: 70"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium text-gray-600">Altura (cm)</label>
+          <input
+            type="number"
+            value={altura}
+            onChange={(e) => setAltura(e.target.value)}
+            placeholder="Ej: 175"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+          />
+        </div>
       </div>
 
         <div className="flex flex-col gap-2">

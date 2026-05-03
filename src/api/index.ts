@@ -1,9 +1,11 @@
 import { buscarIngrediente as buscarOpenFoodFacts } from "./openFoodFacts";
 import { buscarIngredienteUSDA } from "./usda";
+import { buscarAlimentosPropios } from "./alimentosPropios";
 import type { Ingrediente } from "../types";
 
 export async function buscarIngredienteCombinado(nombre: string): Promise<Ingrediente[]> {
   const resultados = await Promise.allSettled([
+    buscarAlimentosPropios(nombre),
     buscarIngredienteUSDA(nombre),
     buscarOpenFoodFacts(nombre),
   ]);

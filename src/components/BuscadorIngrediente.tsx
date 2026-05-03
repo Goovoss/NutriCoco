@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { buscarIngredienteCombinado } from "../api/index";
+import { FormularioAlimento } from "./FormularioAlimento";
 import type { Ingrediente } from "../types";
 
 interface Props {
@@ -11,11 +12,13 @@ export function BuscadorIngrediente({ onAgregarIngrediente }: Props) {
   const [resultados, setResultados] = useState<Ingrediente[]>([]);
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
 
   async function handleBuscar() {
     if (!busqueda.trim()) return;
     setCargando(true);
     setError(null);
+    setMostrarFormulario(false);
     try {
       const datos = await buscarIngredienteCombinado(busqueda);
       setResultados(datos);
@@ -31,6 +34,13 @@ export function BuscadorIngrediente({ onAgregarIngrediente }: Props) {
     onAgregarIngrediente(ingrediente);
     setBusqueda("");
     setResultados([]);
+  }
+
+  function handleAlimentoCreado(ingrediente: Ingrediente) {
+    onAgregarIngrediente(ingrediente);
+    setBusqueda("");
+    setResultados([]);
+    setMostrarFormulario(false);
   }
 
   return (
@@ -53,21 +63,46 @@ export function BuscadorIngrediente({ onAgregarIngrediente }: Props) {
         </button>
       </div>
 
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {error && (
+        <div className="flex flex-col gap-2">
+          <p className="text-red-500 text-sm">{error}</p>
+          <button
+            onClick={() => setMostrarFormulario(true)}
+            className="text-sm text-green-600 hover:underline text-left"
+          >
+            + Añadir este alimento manualmente
+          </button>
+        </div>
+      )}
 
       {resultados.length > 0 && (
-        <ul className="border border-gray-200 rounded-lg divide-y">
-          {resultados.map((r) => (
-            <li key={r.id}>
-              <button
-                onClick={() => handleSeleccionar(r)}
-                className="w-full text-left px-4 py-3 hover:bg-green-50 text-sm"
-              >
-                {r.nombre}
-              </button>
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul className="border border-gray-200 rounded-lg divide-y">
+            {resultados.map((r) => (
+              <li key={r.id}>
+                <button
+                  onClick={() => handleSeleccionar(r)}
+                  className="w-full text-left px-4 py-3 hover:bg-green-50 text-sm"
+                >
+                  {r.nombre}
+                </button>
+              </li>
+            ))}
+          </ul>
+          <button
+            onClick={() => setMostrarFormulario(true)}
+            className="text-sm text-green-600 hover:underline text-left"
+          >
+            + No encuentro lo que busco, añadir manualmente
+          </button>
+        </>
+      )}
+
+      {mostrarFormulario && (
+        <FormularioAlimento
+          onAlimentoCreado={handleAlimentoCreado}
+          onCancelar={() => setMostrarFormulario(false)}
+        />
       )}
     </div>
   );

@@ -3,11 +3,13 @@ import { BuscadorIngrediente } from "./components/BuscadorIngrediente";
 import { TarjetaIngrediente } from "./components/TarjetaIngrediente";
 import { ResumenNutricional } from "./components/ResumenNutricional";
 import { MenuUsuario } from "./components/MenuUsuario";
+import { useUsuario } from "./context/UsuarioContext";
 import type { Ingrediente } from "./types";
 
 function App() {
   const [ingredientes, setIngredientes] = useState<Ingrediente[]>([]);
   const [mostrarBalance, setMostrarBalance] = useState(false);
+  const { guardarPlato } = useUsuario();
 
   function agregarIngrediente(ingrediente: Ingrediente) {
     setIngredientes((prev) => [...prev, ingrediente]);
@@ -17,6 +19,11 @@ function App() {
   function eliminarIngrediente(id: string) {
     setIngredientes((prev) => prev.filter((i) => i.id !== id));
     setMostrarBalance(false);
+  }
+
+  function handleGenerarBalance() {
+    guardarPlato(ingredientes);
+    setMostrarBalance(true);
   }
 
   return (
@@ -53,7 +60,7 @@ function App() {
             </div>
 
             <button
-              onClick={() => setMostrarBalance(true)}
+              onClick={handleGenerarBalance}
               className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition-colors"
             >
               Generar balance total 🥗
