@@ -48,7 +48,7 @@ export async function postAlimento(req: Request, res: Response) {
 
 export async function deleteAlimento(req: Request, res: Response) {
   try {
-    const id = req.params["id"] ?? "";
+    const id = Array.isArray(req.params["id"]) ? req.params["id"][0] : req.params["id"] ?? "";
     const eliminado = await eliminarAlimento(id);
     if (!eliminado) {
       res.status(404).json({ exito: false, mensaje: "Alimento no encontrado" });
