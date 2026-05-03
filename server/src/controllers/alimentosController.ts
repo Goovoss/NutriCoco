@@ -81,7 +81,8 @@ export async function buscarOpenFoodFacts(req: Request, res: Response) {
     const respuesta = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?${params}`);
     const datos = await respuesta.json() as { products?: unknown[] };
     res.json({ exito: true, datos: datos.products ?? [] });
-  } catch {
-    res.status(500).json({ exito: false, mensaje: "Error al buscar en Open Food Facts" });
+  } catch (error) {
+    console.error("Error Open Food Facts:", error);
+    res.status(500).json({ exito: false, mensaje: String(error) });
   }
 }
