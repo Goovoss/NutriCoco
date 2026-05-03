@@ -1,4 +1,3 @@
-import { buscarIngrediente as buscarOpenFoodFacts } from "./openFoodFacts";
 import { buscarIngredienteUSDA } from "./usda";
 import { buscarAlimentosPropios } from "./alimentosPropios";
 import type { Ingrediente } from "../types";
@@ -7,7 +6,6 @@ export async function buscarIngredienteCombinado(nombre: string): Promise<Ingred
   const resultados = await Promise.allSettled([
     buscarAlimentosPropios(nombre),
     buscarIngredienteUSDA(nombre),
-    buscarOpenFoodFacts(nombre),
   ]);
 
   const todos: Ingrediente[] = [];
@@ -18,7 +16,6 @@ export async function buscarIngredienteCombinado(nombre: string): Promise<Ingred
     }
   }
 
-  // Eliminar duplicados por nombre similar
   const vistos = new Set<string>();
   return todos.filter((ing) => {
     const clave = ing.nombre.toLowerCase().slice(0, 20);
