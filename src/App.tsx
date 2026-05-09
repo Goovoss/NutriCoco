@@ -69,13 +69,15 @@ function App() {
         )}
 
         {mostrarBalance && ingredientes.length > 0 && (
-          <div className="bg-white rounded-xl p-5 shadow-sm">
-            <h2 className="text-sm font-semibold text-gray-600 mb-3">
-              Balance nutricional total
-            </h2>
-            <ResumenNutricional ingredientes={ingredientes} />
-          </div>
-        )}
+        <>
+        <div className="bg-white rounded-xl p-5 shadow-sm">
+          <h2 className="text-sm font-semibold text-gray-600 mb-3">
+            Balance nutricional total
+          </h2>
+          <ResumenNutricional ingredientes={ingredientes} />
+        </div>
+      </>
+      )}
       </main>
     </div>
   );

@@ -49,6 +49,7 @@ export function ResumenNutricional({ ingredientes }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
+      {/* Semáforo */}
       <div className={`${semaforo.color} rounded-lg px-4 py-3 text-center font-semibold`}>
         {semaforo.texto}
       </div>
@@ -59,6 +60,7 @@ export function ResumenNutricional({ ingredientes }: Props) {
         </p>
       )}
 
+      {/* Nutrientes */}
       <div className="bg-white rounded-lg p-4 shadow-sm">
         <h3 className="font-semibold text-gray-700 mb-3">Macronutrientes</h3>
         <FilaNutriente label="Calorías" valor={totales.calorias} unidad="kcal" />
@@ -74,15 +76,12 @@ export function ResumenNutricional({ ingredientes }: Props) {
         <FilaNutriente label="Sal" valor={totales.sal} />
       </div>
 
-      {/* Coco consejero */}
-      <div className="bg-green-50 rounded-xl p-4">
-        <h3 className="text-sm font-semibold text-green-700 mb-3">🥥 Coco dice...</h3>
-        <CocoConsejo
-          totales={totales}
-          numIngredientes={ingredientes.length}
-          biometricos={biometricos}
-        />
-      </div>
+      {/* Coco fuera de la tarjeta */}
+      <CocoConsejo
+        totales={totales}
+        numIngredientes={ingredientes.length}
+        biometricos={biometricos}
+      />
     </div>
   );
 }
