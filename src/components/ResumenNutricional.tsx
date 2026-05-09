@@ -48,40 +48,43 @@ export function ResumenNutricional({ ingredientes }: Props) {
   const semaforo = calcularSemaforo(totales, biometricos);
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* Semáforo */}
-      <div className={`${semaforo.color} rounded-lg px-4 py-3 text-center font-semibold`}>
-        {semaforo.texto}
+    <div className="flex gap-4 items-start">
+      {/* Columna izquierda: semáforo y nutrientes */}
+      <div className="flex flex-col gap-4 flex-1">
+        <div className={`${semaforo.color} rounded-lg px-4 py-3 text-center font-semibold`}>
+          {semaforo.texto}
+        </div>
+
+        {!biometricos && (
+          <p className="text-xs text-gray-400 text-center">
+            💡 Añade tus datos biométricos para un análisis más preciso
+          </p>
+        )}
+
+        <div className="bg-white rounded-lg p-4 shadow-sm">
+          <h3 className="font-semibold text-gray-700 mb-3">Macronutrientes</h3>
+          <FilaNutriente label="Calorías" valor={totales.calorias} unidad="kcal" />
+          <FilaNutriente label="Proteínas" valor={totales.proteinas} />
+          <FilaNutriente label="Grasas" valor={totales.grasas} />
+          <FilaNutriente label="Carbohidratos" valor={totales.carbohidratos} />
+        </div>
+
+        <div className="bg-white rounded-lg p-4 shadow-sm">
+          <h3 className="font-semibold text-gray-700 mb-3">Micronutrientes</h3>
+          <FilaNutriente label="Fibra" valor={totales.fibra} />
+          <FilaNutriente label="Azúcar" valor={totales.azucar} />
+          <FilaNutriente label="Sal" valor={totales.sal} />
+        </div>
       </div>
 
-      {!biometricos && (
-        <p className="text-xs text-gray-400 text-center">
-          💡 Añade tus datos biométricos para un análisis más preciso
-        </p>
-      )}
-
-      {/* Nutrientes */}
-      <div className="bg-white rounded-lg p-4 shadow-sm">
-        <h3 className="font-semibold text-gray-700 mb-3">Macronutrientes</h3>
-        <FilaNutriente label="Calorías" valor={totales.calorias} unidad="kcal" />
-        <FilaNutriente label="Proteínas" valor={totales.proteinas} />
-        <FilaNutriente label="Grasas" valor={totales.grasas} />
-        <FilaNutriente label="Carbohidratos" valor={totales.carbohidratos} />
+      {/* Columna derecha: Coco */}
+      <div className="w-48 flex-shrink-0">
+        <CocoConsejo
+          totales={totales}
+          numIngredientes={ingredientes.length}
+          biometricos={biometricos}
+        />
       </div>
-
-      <div className="bg-white rounded-lg p-4 shadow-sm">
-        <h3 className="font-semibold text-gray-700 mb-3">Micronutrientes</h3>
-        <FilaNutriente label="Fibra" valor={totales.fibra} />
-        <FilaNutriente label="Azúcar" valor={totales.azucar} />
-        <FilaNutriente label="Sal" valor={totales.sal} />
-      </div>
-
-      {/* Coco fuera de la tarjeta */}
-      <CocoConsejo
-        totales={totales}
-        numIngredientes={ingredientes.length}
-        biometricos={biometricos}
-      />
     </div>
   );
 }
