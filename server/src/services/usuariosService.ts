@@ -37,10 +37,10 @@ export async function loginUsuario(email: string, password: string) {
   const resultado = await pool.query("SELECT * FROM usuarios WHERE email = $1", [email]);
   const usuario = resultado.rows[0] as UsuarioDB | undefined;
 
-  if (!usuario) throw new Error("Email o contraseña incorrectos");
+  if (!usuario) throw new Error("No existe ninguna cuenta con ese email");
 
   const passwordValido = await bcrypt.compare(password, usuario.password);
-  if (!passwordValido) throw new Error("Email o contraseña incorrectos");
+  if (!passwordValido) throw new Error("Contraseña incorrecta");
 
   const token = jwt.sign(
     { id: usuario.id, nombre: usuario.nombre, email: usuario.email },
