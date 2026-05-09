@@ -1,6 +1,7 @@
 import type { Ingrediente, Nutrientes } from "../types";
 import { useUsuario } from "../context/UsuarioContext";
 import { calcularSemaforo } from "../utils/nutricion";
+import { CocoConsejo } from "./CocoConsejo";
 
 interface Props {
   ingredientes: Ingrediente[];
@@ -71,6 +72,16 @@ export function ResumenNutricional({ ingredientes }: Props) {
         <FilaNutriente label="Fibra" valor={totales.fibra} />
         <FilaNutriente label="Azúcar" valor={totales.azucar} />
         <FilaNutriente label="Sal" valor={totales.sal} />
+      </div>
+
+      {/* Coco consejero */}
+      <div className="bg-green-50 rounded-xl p-4">
+        <h3 className="text-sm font-semibold text-green-700 mb-3">🥥 Coco dice...</h3>
+        <CocoConsejo
+          totales={totales}
+          numIngredientes={ingredientes.length}
+          biometricos={biometricos}
+        />
       </div>
     </div>
   );
