@@ -60,27 +60,21 @@ export function CocoConsejo({ totales, numIngredientes, biometricos }: Props) {
   const consejos = generarConsejos(totales, numIngredientes, biometricos);
 
   return (
-    <div className="flex gap-4 items-start">
-      {/* Coco saltando */}
-      <div
-        className="text-5xl flex-shrink-0"
-        style={{ animation: "bounce 1s infinite" }}
-      >
-        🥥
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center gap-2">
+        <div className="text-4xl" style={{ animation: "bounce 1s infinite" }}>🥥</div>
+        <span className="text-sm font-bold text-green-700">Coco dice...</span>
       </div>
 
-      {/* Consejos */}
-      <div className="flex flex-col gap-3 flex-1">
-        {consejos.map((consejo, i) => (
-          <div
-            key={i}
-            className="relative bg-white border-2 border-green-400 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm"
-          >
-            <div className="absolute -left-3 top-3 w-3 h-3 bg-white border-l-2 border-t-2 border-green-400 rotate-[-45deg]" />
-            <p className="text-sm font-semibold text-gray-800 leading-relaxed">{consejo}</p>
-          </div>
-        ))}
-      </div>
+      {consejos.map((consejo, i) => (
+        <div
+          key={i}
+          className="relative bg-white border-2 border-green-400 rounded-2xl rounded-tl-none px-5 py-4 shadow-sm w-full"
+        >
+          <div className="absolute -left-3 top-3 w-3 h-3 bg-white border-l-2 border-t-2 border-green-400 rotate-[-45deg]" />
+          <p className="text-sm font-semibold text-gray-800 leading-relaxed">{consejo}</p>
+        </div>
+      ))}
 
       <style>{`
         @keyframes bounce {

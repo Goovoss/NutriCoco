@@ -70,34 +70,32 @@ function App() {
         )}
 
         {mostrarBalance && ingredientes.length > 0 && (
-        <div className="flex gap-4 items-start">
-          {/* Coco a la izquierda fuera de la tarjeta */}
-          <div className="flex-shrink-0 w-44">
-            <CocoConsejo
-              totales={ingredientes.reduce(
-                (acc, ing) => ({
-                  calorias: acc.calorias + ing.nutrientes.calorias,
-                  proteinas: acc.proteinas + ing.nutrientes.proteinas,
-                  grasas: acc.grasas + ing.nutrientes.grasas,
-                  carbohidratos: acc.carbohidratos + ing.nutrientes.carbohidratos,
-                  fibra: acc.fibra + ing.nutrientes.fibra,
-                  azucar: acc.azucar + ing.nutrientes.azucar,
-                  sal: acc.sal + ing.nutrientes.sal,
-                }),
-                { calorias: 0, proteinas: 0, grasas: 0, carbohidratos: 0, fibra: 0, azucar: 0, sal: 0 }
-              )}
-              numIngredientes={ingredientes.length}
-              biometricos={null}
-            />
-          </div>
-
-          {/* Balance a la derecha */}
-          <div className="bg-white rounded-xl p-5 shadow-sm flex-1">
+        <div className="flex flex-col gap-4">
+          {/* Balance nutricional */}
+          <div className="bg-white rounded-xl p-5 shadow-sm">
             <h2 className="text-sm font-semibold text-gray-600 mb-3">
               Balance nutricional total
             </h2>
             <ResumenNutricional ingredientes={ingredientes} />
           </div>
+
+          {/* Coco debajo pero ancho completo */}
+          <CocoConsejo
+            totales={ingredientes.reduce(
+              (acc, ing) => ({
+                calorias: acc.calorias + ing.nutrientes.calorias,
+                proteinas: acc.proteinas + ing.nutrientes.proteinas,
+                grasas: acc.grasas + ing.nutrientes.grasas,
+                carbohidratos: acc.carbohidratos + ing.nutrientes.carbohidratos,
+                fibra: acc.fibra + ing.nutrientes.fibra,
+                azucar: acc.azucar + ing.nutrientes.azucar,
+                sal: acc.sal + ing.nutrientes.sal,
+              }),
+              { calorias: 0, proteinas: 0, grasas: 0, carbohidratos: 0, fibra: 0, azucar: 0, sal: 0 }
+            )}
+            numIngredientes={ingredientes.length}
+            biometricos={null}
+          />
         </div>
       )}
       </main>
