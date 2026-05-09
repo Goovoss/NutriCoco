@@ -1,21 +1,37 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUsuario } from "../context/UsuarioContext";
+import { loginUsuario } from "../api/usuarios";
 
 export function Login() {
-  const { login } = useUsuario();
   const navigate = useNavigate();
+  const { login } = useUsuario();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [cargando, setCargando] = useState(false);
 
-  function handleLogin() {
+  async function handleLogin() {
     if (!email || !password) {
       setError("Por favor rellena todos los campos");
       return;
     }
-    login({ nombre: "Usuario Ejemplo", email });
-    navigate("/app");
+    setCargando(true);
+    setError(null);
+    try {
+      const respuesta = await loginUsuario(email, password);
+      if (!respuesta.exito || !respuesta.datos) {
+        setError(respuesta.mensaje ?? "Error al iniciar sesión");
+        return;
+      }
+      login({ nombre: respuesta.datos.nombre, email: respuesta.datos.email });
+      localStorage.setItem("nutricoco_token", respuesta.datos.token);
+      navigate("/app");
+    } catch {
+      setError("Error de conexión. Inténtalo de nuevo.");
+    } finally {
+      setCargando(false);
+    }
   }
 
   return (
@@ -40,6 +56,7 @@ export function Login() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
             placeholder="••••••••"
             className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
           />
@@ -49,9 +66,10 @@ export function Login() {
 
         <button
           onClick={handleLogin}
-          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition-colors"
+          disabled={cargando}
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition-colors disabled:opacity-50"
         >
-          Entrar
+          {cargando ? "Entrando..." : "Entrar"}
         </button>
 
         <p className="text-center text-sm text-gray-500">

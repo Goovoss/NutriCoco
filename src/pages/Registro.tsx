@@ -1,33 +1,48 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUsuario } from "../context/UsuarioContext";
-
+import { registrarUsuario } from "../api/usuarios";
 
 export function Registro() {
-  const { login } = useUsuario();
   const navigate = useNavigate();
+  const { login } = useUsuario();
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmar, setConfirmar] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [cargando, setCargando] = useState(false);
 
-  function handleRegistro() {
-  if (!nombre || !email || !password || !confirmar) {
-    setError("Por favor rellena todos los campos");
-    return;
+  async function handleRegistro() {
+    if (!nombre || !email || !password || !confirmar) {
+      setError("Por favor rellena todos los campos");
+      return;
+    }
+    if (password !== confirmar) {
+      setError("Las contraseñas no coinciden");
+      return;
+    }
+    if (password.length < 6) {
+      setError("La contraseña debe tener al menos 6 caracteres");
+      return;
+    }
+    setCargando(true);
+    setError(null);
+    try {
+      const respuesta = await registrarUsuario(nombre, email, password);
+      if (!respuesta.exito || !respuesta.datos) {
+        setError(respuesta.mensaje ?? "Error al registrarse");
+        return;
+      }
+      login({ nombre: respuesta.datos.nombre, email: respuesta.datos.email });
+      localStorage.setItem("nutricoco_token", respuesta.datos.token);
+      navigate("/biometricos");
+    } catch {
+      setError("Error de conexión. Inténtalo de nuevo.");
+    } finally {
+      setCargando(false);
+    }
   }
-  if (password !== confirmar) {
-    setError("Las contraseñas no coinciden");
-    return;
-  }
-  if (password.length < 6) {
-    setError("La contraseña debe tener al menos 6 caracteres");
-    return;
-  }
-  login({ nombre, email });
-  navigate("/biometricos");
-}
 
   return (
     <div className="min-h-screen bg-green-50 flex flex-col items-center justify-center px-4">
@@ -73,6 +88,7 @@ export function Registro() {
             type="password"
             value={confirmar}
             onChange={(e) => setConfirmar(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleRegistro()}
             placeholder="••••••••"
             className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
           />
@@ -82,9 +98,10 @@ export function Registro() {
 
         <button
           onClick={handleRegistro}
-          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition-colors"
+          disabled={cargando}
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition-colors disabled:opacity-50"
         >
-          Crear cuenta
+          {cargando ? "Creando cuenta..." : "Crear cuenta"}
         </button>
 
         <p className="text-center text-sm text-gray-500">

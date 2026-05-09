@@ -8,6 +8,14 @@ const pool = new Pool({
 
 export async function inicializarDB() {
   await pool.query(`
+    CREATE TABLE IF NOT EXISTS usuarios (
+      id TEXT PRIMARY KEY,
+      nombre TEXT NOT NULL,
+      email TEXT UNIQUE NOT NULL,
+      password TEXT NOT NULL,
+      creado_en TEXT NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS alimentos (
       id TEXT PRIMARY KEY,
       nombre TEXT NOT NULL,

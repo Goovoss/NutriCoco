@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import alimentosRouter from "./routes/alimentos.js";
+import usuariosRouter from "./routes/usuarios.js";
 import { inicializarDB } from "./config/database.js";
 
 const app = express();
@@ -10,6 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/v1/alimentos", alimentosRouter);
+app.use("/api/v1/usuarios", usuariosRouter);
 
 app.get("/api/v1/health", (_req, res) => {
   res.json({ estado: "OK", mensaje: "NutriCoco API funcionando 🥥" });

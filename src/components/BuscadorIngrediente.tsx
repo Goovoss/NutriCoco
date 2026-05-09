@@ -13,6 +13,7 @@ export function BuscadorIngrediente({ onAgregarIngrediente }: Props) {
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [exito, setExito] = useState<string | null>(null);
 
   async function handleBuscar() {
     if (!busqueda.trim()) return;
@@ -40,6 +41,8 @@ export function BuscadorIngrediente({ onAgregarIngrediente }: Props) {
     onAgregarIngrediente(ingrediente);
     setBusqueda("");
     setResultados([]);
+    setExito(`✅ ${ingrediente.nombre} añadido`);
+    setTimeout(() => setExito(null), 3000);
     setMostrarFormulario(false);
   }
 
@@ -66,6 +69,10 @@ export function BuscadorIngrediente({ onAgregarIngrediente }: Props) {
       {error && (
         <div className="flex flex-col gap-2">
           <p className="text-red-500 text-sm">{error}</p>
+        
+        {exito && 
+        <p className="text-green-600 text-sm font-medium">{exito}</p>}
+
           <button
             onClick={() => setMostrarFormulario(true)}
             className="text-sm text-green-600 hover:underline text-left"
