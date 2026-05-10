@@ -1,29 +1,50 @@
 # Arquitectura de NutriCoco
 
-## Estructura de componentes
-- `App.tsx` — página principal con buscador y balance
-- `BuscadorIngrediente` — busca en tres fuentes: BD propia, USDA y Open Food Facts
-- `TarjetaIngrediente` — muestra macros de cada ingrediente
-- `ResumenNutricional` — calcula y muestra el balance total
-- `MenuUsuario` — desplegable con opciones del usuario
-- `FormularioAlimento` — añadir alimentos manualmente a la BD
+## Estructura de componentes principales
+- `App.tsx` — página principal con buscador, tarjetas y balance
+- `BuscadorIngrediente` — busca en BD propia y USDA
+- `TarjetaIngrediente` — muestra macros de cada ingrediente con opción de eliminar
+- `ResumenNutricional` — calcula y muestra el balance total con semáforo
+- `CocoConsejo` — mascota que da consejos nutricionales personalizados
+- `MenuUsuario` — desplegable con opciones del usuario autenticado
+- `FormularioAlimento` — formulario para añadir alimentos manualmente a la BD
 
-## Gestión de estado
-- Estado local (`useState`) para ingredientes y UI
+## Componentes reutilizables
+- `TarjetaIngrediente` — usable con cualquier tipo de ingrediente
+- `CocoConsejo` — recibe datos calculados y genera consejos dinámicos
+- `FormularioAlimento` — reutilizable desde el buscador cuando no hay resultados
+
+## Gestión del estado
+- Estado local (`useState`) para ingredientes activos y visibilidad del balance
 - Context API (`UsuarioContext`) para usuario, biométricos e historial
 - LocalStorage para persistir el historial entre sesiones
 
 ## Flujo de datos
-Buscador → API combinada (BD propia + USDA + Open Food Facts) → Tarjetas → Balance total → Historial
+Usuario busca → API combinada (BD propia + USDA)
+→ Selecciona ingrediente → Estado local
+→ Genera balance → ResumenNutricional + CocoConsejo
+→ Guarda en historial → LocalStorage
 
-## Backend
-Express con SQLite. Arquitectura por capas:
-- `routes/` → define los endpoints
-- `controllers/` → maneja las peticiones
-- `services/` → lógica de negocio y acceso a BD
+## Backend — Arquitectura por capas
+routes/      → Define los endpoints REST
+controllers/ → Maneja las peticiones HTTP
+services/    → Lógica de negocio y acceso a BD
+config/      → Configuración de PostgreSQL
 
-## Endpoints
-- `GET /api/v1/alimentos?buscar=nombre` → buscar alimentos
-- `POST /api/v1/alimentos` → crear alimento
-- `DELETE /api/v1/alimentos/:id` → eliminar alimento
-- `GET /api/v1/health` → estado del servidor
+## Decisiones de arquitectura
+
+### ¿Por qué Context y no Redux?
+La app no tiene suficiente complejidad de estado como para justificar Redux.
+Context API es suficiente para compartir usuario, biométricos e historial.
+
+### PostgreSQL  
+Los datos de usuarios y alimentos son relacionales y tienen estructura fija.
+PostgreSQL es más adecuado para datos estructurados.
+
+### ¿Por qué USDA como API principal?
+Open Food Facts tiene problemas de CORS en producción y datos inconsistentes.
+USDA tiene datos más fiables para alimentos básicos sin procesar.
+
+### ¿Por qué JWT?
+Permite autenticación stateless — el servidor no necesita guardar sesiones.
+El token se guarda en LocalStorage y se envía en cada petición.
