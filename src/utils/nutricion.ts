@@ -13,46 +13,43 @@ interface Umbrales {
 }
 
 export function calcularUmbrales(biometricos: DatosBiometricos | null): Umbrales {
-  // Umbrales genéricos si no hay datos biométricos
   if (!biometricos) {
     return {
-      caloriasAmarillo: 700, caloriasRojo: 1200,
-      grasasAmarillo: 20, grasasRojo: 40,
-      azucarAmarillo: 15, azucarRojo: 30,
-      salAmarillo: 3, salRojo: 6,
+      caloriasAmarillo: 900,
+      caloriasRojo: 1500,
+      grasasAmarillo: 35,
+      grasasRojo: 60,
+      azucarAmarillo: 25,
+      azucarRojo: 45,
+      salAmarillo: 4,
+      salRojo: 8,
     };
   }
 
   const { edad, sexo, peso, altura, actividad, objetivo } = biometricos;
 
-  // Tasa metabólica basal (Harris-Benedict)
   const tmb = sexo === "hombre"
     ? 88.36 + 13.4 * peso + 4.8 * altura - 5.7 * edad
     : 447.6 + 9.2 * peso + 3.1 * altura - 4.3 * edad;
 
-  // Factor de actividad
   const factorActividad = actividad === "sedentario" ? 1.2 : actividad === "moderado" ? 1.55 : 1.9;
 
-  // Calorías diarias totales
   let caloriasDiarias = tmb * factorActividad;
   if (objetivo === "perder") caloriasDiarias -= 500;
   if (objetivo === "ganar") caloriasDiarias += 300;
 
-  // Umbrales por plato (aprox 35% de las calorías diarias)
-  const porPlato = caloriasDiarias * 0.35;
-
-  // Sal máxima según edad (OMS)
-  const salMax = edad > 60 ? 4 : edad > 40 ? 4.5 : 5;
+  const porPlato = caloriasDiarias * 0.40;
+  const salMax = edad > 60 ? 4 : edad > 40 ? 5 : 6;
 
   return {
-    caloriasAmarillo: porPlato * 0.8,
-    caloriasRojo: porPlato * 1.2,
-    grasasAmarillo: sexo === "hombre" ? 22 : 18,
-    grasasRojo: sexo === "hombre" ? 35 : 28,
-    azucarAmarillo: 15,
-    azucarRojo: 25,
-    salAmarillo: salMax * 0.5,
-    salRojo: salMax * 0.8,
+    caloriasAmarillo: porPlato * 0.9,
+    caloriasRojo: porPlato * 1.4,
+    grasasAmarillo: sexo === "hombre" ? 30 : 25,
+    grasasRojo: sexo === "hombre" ? 55 : 45,
+    azucarAmarillo: 20,
+    azucarRojo: 40,
+    salAmarillo: salMax * 0.6,
+    salRojo: salMax * 0.9,
   };
 }
 
