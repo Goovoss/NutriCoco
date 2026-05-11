@@ -14,6 +14,7 @@ NutriCoco es una aplicación web fullstack que permite analizar los macros y mic
 |------------|-----|
 | Frontend | [nutri-coco-bice.vercel.app](https://nutri-coco-bice.vercel.app) |
 | Backend | [nutricoco-api.onrender.com](https://nutricoco-api.onrender.com) |
+| Trello | [Tablero NutriCoco](https://trello.com/b/aZlCmU8w/nutricoco) |
 
 ---
 

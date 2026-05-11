@@ -73,38 +73,38 @@ function App() {
           </>
         )}
 
-            {/* Balance + Coco lado a lado */}
+      {/* Balance + Coco lado a lado */}
       {mostrarBalance && ingredientes.length > 0 && (
-        <div className="flex gap-4 items-start">
-          {/* Coco a la IZQUIERDA */}
-          <div className="w-56 flex-shrink-0">
-            <CocoConsejo
-              totales={ingredientes.reduce(
-                (acc, ing) => ({
-                  calorias: acc.calorias + ing.nutrientes.calorias,
-                  proteinas: acc.proteinas + ing.nutrientes.proteinas,
-                  grasas: acc.grasas + ing.nutrientes.grasas,
-                  carbohidratos: acc.carbohidratos + ing.nutrientes.carbohidratos,
-                  fibra: acc.fibra + ing.nutrientes.fibra,
-                  azucar: acc.azucar + ing.nutrientes.azucar,
-                  sal: acc.sal + ing.nutrientes.sal,
-                }),
-                { calorias: 0, proteinas: 0, grasas: 0, carbohidratos: 0, fibra: 0, azucar: 0, sal: 0 }
-              )}
-              numIngredientes={ingredientes.length}
-              biometricos={null}
-            />
-          </div>
-
-          {/* Balance a la DERECHA */}
-          <div className="bg-white rounded-xl p-5 shadow-sm flex-1">
-            <h2 className="text-sm font-semibold text-gray-600 mb-3">
-              Balance nutricional total
-            </h2>
-            <ResumenNutricional ingredientes={ingredientes} />
-          </div>
+      <div className="flex flex-col md:flex-row gap-4 items-start">
+        {/* Coco a la IZQUIERDA */}
+        <div className="w-full md:w-56 flex-shrink-0">
+          <CocoConsejo
+            totales={ingredientes.reduce(
+              (acc, ing) => ({
+                calorias: acc.calorias + ing.nutrientes.calorias,
+                proteinas: acc.proteinas + ing.nutrientes.proteinas,
+                grasas: acc.grasas + ing.nutrientes.grasas,
+                carbohidratos: acc.carbohidratos + ing.nutrientes.carbohidratos,
+                fibra: acc.fibra + ing.nutrientes.fibra,
+                azucar: acc.azucar + ing.nutrientes.azucar,
+                sal: acc.sal + ing.nutrientes.sal,
+              }),
+              { calorias: 0, proteinas: 0, grasas: 0, carbohidratos: 0, fibra: 0, azucar: 0, sal: 0 }
+            )}
+            numIngredientes={ingredientes.length}
+            biometricos={null}
+          />
         </div>
-      )}
+
+        {/* Balance a la DERECHA */}
+        <div className="bg-white rounded-xl p-5 shadow-sm flex-1 w-full">
+          <h2 className="text-sm font-semibold text-gray-600 mb-3">
+            Balance nutricional total
+          </h2>
+          <ResumenNutricional ingredientes={ingredientes} />
+        </div>
+      </div>
+    )}
       </div>
     </main>
   </div>
